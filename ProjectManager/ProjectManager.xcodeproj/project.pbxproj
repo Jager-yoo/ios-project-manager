@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C101D29E27D1398B00334F5C /* TaskListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C101D29D27D1398B00334F5C /* TaskListCellView.swift */; };
 		C101D2A127D13C0000334F5C /* TimeInterval+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C101D2A027D13C0000334F5C /* TimeInterval+Extension.swift */; };
+		C101D2A327D156D600334F5C /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C101D2A227D156D600334F5C /* TaskListView.swift */; };
 		C182E78427CD0E9D00F6218C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182E78327CD0E9D00F6218C /* ContentView.swift */; };
 		C182E78727CD43DE00F6218C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = C182E78627CD43DE00F6218C /* FirebaseAnalytics */; };
 		C182E7A127CDD57800F6218C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C182E7A027CDD57800F6218C /* GoogleService-Info.plist */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		C101D29D27D1398B00334F5C /* TaskListCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListCellView.swift; sourceTree = "<group>"; };
 		C101D2A027D13C0000334F5C /* TimeInterval+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+Extension.swift"; sourceTree = "<group>"; };
+		C101D2A227D156D600334F5C /* TaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListView.swift; sourceTree = "<group>"; };
 		C182E78327CD0E9D00F6218C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C182E7A027CDD57800F6218C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C1F2B92F27CE69D100B8FD51 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				C182E78327CD0E9D00F6218C /* ContentView.swift */,
+				C101D2A227D156D600334F5C /* TaskListView.swift */,
 				C101D29D27D1398B00334F5C /* TaskListCellView.swift */,
 				C7431F1025F51E1E0094C4CF /* LaunchScreen.storyboard */,
 			);
@@ -330,6 +333,7 @@
 				C101D2A127D13C0000334F5C /* TimeInterval+Extension.swift in Sources */,
 				C1FE9BBB27CFB68600397B90 /* Task.swift in Sources */,
 				C1FE9BB927CFB64300397B90 /* TaskStatus.swift in Sources */,
+				C101D2A327D156D600334F5C /* TaskListView.swift in Sources */,
 				C7431F0825F51E1D0094C4CF /* SceneDelegate.swift in Sources */,
 				C1FE9BC127CFCD3500397B90 /* TaskManageable.swift in Sources */,
 			);

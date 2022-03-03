@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct TaskListCellView: View {
+    
     let task: Task
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(task.title)
                 .font(.title3)
+                .lineLimit(1)
+                .truncationMode(.tail)
             Text(task.body)
                 .font(.body)
                 .foregroundColor(.gray)
@@ -23,5 +26,6 @@ struct TaskListCellView: View {
                 .font(.callout)
                 .foregroundColor(task.dueDate.isOverdue ? .red : .black)
         }
+        .padding(.all, 10)
     }
 }
