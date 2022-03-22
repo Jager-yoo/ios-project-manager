@@ -40,7 +40,7 @@ struct TaskListRowView: View {
             taskListRowViewModel.isTaskEditing.toggle()
         }
         .sheet(isPresented: $taskListRowViewModel.isTaskEditing) {
-            TaskFormingView(selectedTask: taskListRowViewModel.task, mode: $taskListRowViewModel.isTaskEditing)
+            TaskFormView(selectedTask: taskListRowViewModel.task, mode: $taskListRowViewModel.isTaskEditing)
         }
         .onLongPressGesture(perform: {
             taskListRowViewModel.isTaskStatusChanging.toggle()

@@ -1,5 +1,5 @@
 //
-//  TaskFormingView.swift
+//  TaskFormView.swift
 //  ProjectManager
 //
 //  Created by 예거 on 2022/03/14.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TaskFormingView: View {
+struct TaskFormView: View {
     
     @EnvironmentObject private var taskManager: TaskManager
     @StateObject private var taskFormingViewModel: TaskFormingViewModel
@@ -59,7 +59,7 @@ struct TaskFormingView: View {
     }
 }
 
-private extension TaskFormingView {
+private extension TaskFormView {
     
     final class TaskFormingViewModel: ObservableObject {
         

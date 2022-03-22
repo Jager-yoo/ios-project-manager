@@ -30,7 +30,7 @@ struct MainView: View {
                         .font(.title2)
                 }
                 .sheet(isPresented: $mainViewModel.isTaskCreating) {
-                    TaskFormingView(selectedTask: nil, mode: $mainViewModel.isTaskCreating)
+                    TaskFormView(selectedTask: nil, mode: $mainViewModel.isTaskCreating)
                 }
             }
         }
