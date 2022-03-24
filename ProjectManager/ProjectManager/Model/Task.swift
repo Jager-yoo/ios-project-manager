@@ -6,21 +6,21 @@
 //
 
 import Foundation
+import RealmSwift
 
-class Task: ObservableObject, Identifiable, Equatable {
+class Task: Object, ObjectKeyIdentifiable {
     
-    let id: String
-    @Published var title: String
-    @Published var body: String
-    @Published var dueDate: Date
-    @Published var status: TaskStatus
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var title: String
+    @Persisted var body: String
+    @Persisted var dueDate: Date
+    @Persisted var status: TaskStatus = .todo
     
-    init(title: String, body: String, dueDate: Date) {
-        self.id = UUID().uuidString
+    convenience init(title: String, body: String, dueDate: Date) {
+        self.init()
         self.title = title
         self.body = body
         self.dueDate = dueDate
-        self.status = .todo
     }
     
     // !!!: 할일 인스턴스 deinit 확인용 코드

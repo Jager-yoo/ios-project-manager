@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import RealmSwift
 
-enum TaskStatus: CaseIterable {
+enum TaskStatus: Int, PersistableEnum {
     
     case todo
     case doing
