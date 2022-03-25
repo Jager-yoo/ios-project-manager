@@ -25,13 +25,13 @@
 - Task 인스턴스 간의 `동일성(id 매칭)`을 확인할 때 `==` 연산자를 사용할 수 있도록 `Equatable` 프로토콜을 채택했습니다.
 
 ```swift
-class Task: Equatable {
+final class Task: ObservableObject, Identifiable, Equatable {
     
     let id: String
-    var title: String
-    var body: String
-    var dueDate: Date
-    var status: TaskStatus
+    @Published var title: String
+    @Published var body: String
+    @Published var dueDate: Date
+    @Published var status: TaskStatus
     
     init(title: String, body: String, dueDate: Date) {
         self.id = UUID().uuidString
@@ -46,13 +46,23 @@ class Task: Equatable {
     }
 }
 
-enum TaskStatus {
+enum TaskStatus: CaseIterable {
     
     case todo
     case doing
     case done
+    
+    var headerTitle: String {
+        switch self {
+        case .todo:
+            return "TODO"
+        case .doing:
+            return "DOING"
+        case .done:
+            return "DONE"
+        }
+    }
 }
-
 ```
 
 <br>
@@ -60,28 +70,22 @@ enum TaskStatus {
 ### 2️⃣ 데이터 관리를 담당하는 TaskManager 타입과 추상화 프로토콜 구현
 
 - TaskManager 클래스는 할일(Task)들을 `배열` 형태로 가지고 있습니다.
-- 추후 3개의 `UITableView(List)`를 구현할 때 `DataSource`로서 데이터를 전달해야 하므로, Status 별로 배열을 필터링해주는 연산 프로퍼티를 3개 구현했습니다.
-- 할일(Task)을 보여줄 때, dueDate 가 `오래된 순서대로 정렬`될 수 있도록, Property Observer `didSet`을 사용했습니다.
-- 전체 데이터에 해당하는 tasks 배열이 항상 오래된 순서대로 정렬되어 있으므로, 연산 프로퍼티의 리턴값으로 나오는 배열에서도 정렬을 유지할 것입니다.
+- 추후 3개의 `UITableView(List)`를 구현할 때 `DataSource`로서 데이터를 전달해야 하므로, Status 별로 배열을 필터링해서 리턴해주는 메서드를 구현했습니다.
+  - 할일(Task)을 보여줄 때, dueDate 가 `오래된 순서대로 정렬`될 수 있도록, filter 후에 sorted 처리해서 리턴합니다.
 - TaskManager `기능의 추상화`를 위해 TaskManageable 프로토콜 구현했습니다.
-- Task 수정/삭제 메서드는 파라미터로 `옵셔널 Task?`를 받고, 내부에서 `옵셔널 바인딩`을 하고 에러를 던질 수 있습니다.
+- Task 수정 메서드는 파라미터로 `옵셔널 Task?`를 받고, 내부에서 `옵셔널 바인딩`을 하고 에러를 던질 수 있습니다.
 
 ```swift
-class TaskManager: TaskManageable {
+final class TaskManager: ObservableObject, TaskManageable {
     
-    private var tasks = [Task]() {
-        didSet {
-            tasks.sort { $0.dueDate < $1.dueDate }
-        }
+    @Published private var tasks = [Task]()
+    
+    func fetchTasks(in status: TaskStatus) -> [Task] {
+        return tasks.filter { $0.status == status }.sorted { $0.dueDate < $1.dueDate }
     }
-    var todoTasks: [Task] {
-        return tasks.filter { $0.status == .todo }
-    }
-    var doingTasks: [Task] {
-        return tasks.filter { $0.status == .doing }
-    }
-    var doneTasks: [Task] {
-        return tasks.filter { $0.status == .done }
+    
+    func validateTask(title: String, body: String) -> Bool {
+        return title.isEmpty == false && body.count <= 1000
     }
     
     func createTask(title: String, body: String, dueDate: Date) {
@@ -89,7 +93,7 @@ class TaskManager: TaskManageable {
         tasks.append(newTask)
     }
     
-    func modifyTask(target: Task?, title: String, body: String, dueDate: Date) throws {
+    func editTask(target: Task?, title: String, body: String, dueDate: Date) throws {
         guard let target = target else {
             throw TaskManagerError.taskIsNil
         }
@@ -107,10 +111,12 @@ class TaskManager: TaskManageable {
         target.status = status
     }
     
-    func deleteTask(target: Task?) throws {
-        guard let target = target else {
+    func deleteTask(indexSet: IndexSet, in status: TaskStatus) throws {
+        guard let convertedIndex = indexSet.first else {
             throw TaskManagerError.taskIsNil
         }
+        
+        let target = fetchTasks(in: status)[convertedIndex]
         
         guard let targetIndex = tasks.firstIndex(of: target) else {
             throw TaskManagerError.taskIsNil
@@ -126,14 +132,13 @@ class TaskManager: TaskManageable {
 ### 3️⃣ TaskManager 기능에 대한 Unit Test 코드 작성
 
 - `setUpWithError`, `tearDownWithError` 메서드를 이용해서 각 케이스 메서드가 모두 동일한 조건에서 실행될 수 있도록 했습니다.
-- 테스트 메서드는 8개 작성했으며, 앞으로 추가될 수 있습니다. 😄
+- 테스트 메서드는 7개 작성했으며, 앞으로 추가될 수 있습니다. 😄
   - Task 인스턴스 생성 검증
   - TaskStatus 변경 검증
   - Task 수정 검증
   - Task 수정 실패(에러) 검증
   - TaskStatus 변경 후 삭제 검증
   - TaskStatus 변경 실패(에러) 검증
-  - Task 삭제 실패(에러) 검증Task 생성 후 dueDate 오래된 순서로 정렬 검증
   - Task 생성 후 dueDate 오래된 순서로 정렬 검증
 
 <br>
