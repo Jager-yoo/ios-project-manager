@@ -21,7 +21,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         createSampleTasks()
-        let hostingVC = UIHostingController(rootView: MainView().environmentObject(taskManager))
+        let hostingVC = UIHostingController(
+            rootView: MainView()
+                .environmentObject(taskManager)
+                .onAppear() {
+                    print("⚠️💾⚠️")
+                    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path)
+                    print("⚠️💾⚠️")
+                    UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+                }
+        )
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = hostingVC
         window?.makeKeyAndVisible()

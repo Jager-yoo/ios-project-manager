@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-class Task: Object, ObjectKeyIdentifiable {
+final class Task: Object, ObjectKeyIdentifiable {
     
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var title: String
@@ -25,7 +25,7 @@ class Task: Object, ObjectKeyIdentifiable {
     
     // !!!: 할일 인스턴스 deinit 확인용 코드
     deinit {
-        print("🍓 할일 인스턴스 삭제됨!")
+        print("🍓 할일 인스턴스 삭제됨! -> title: \(title)")
     }
     
     static func == (lhs: Task, rhs: Task) -> Bool {
