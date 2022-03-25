@@ -8,6 +8,194 @@
 
 <br>
 
+# ⚙️ [STEP 2-2] 기본 UI 및 Cell 간의 이동, 삭제, 수정 등의 비즈니스 로직 구현
+
+### 1️⃣ MVVM 패턴 적용
+
+- 뼈대가 되는 View 구조체들이 프로퍼티로 `@EnvironmentObject`, `@StateObject` 만 갖고, 그 외의 비즈니스 로직이나 상수는 전부 `뷰모델` 내로 이동시켰습니다! 👍🏻
+
+- Paul Hudson 의 영상인 [Introducing MVVM into your SwiftUI project](https://youtu.be/kfsA87qRC3Y?t=133)를 참고했는데요, Paul 은 뷰모델을 구현할 때, View 구조체의 `extension`을 만들고 `nested 뷰모델 클래스`를 구현하는 방식을 관찰했습니다.
+이런 방식으로 하면, View 구조체들이 자신의 뷰모델만 접근할 수 있고 다른 뷰모델은 알지 못하기 때문에, `인터페이스 분리 원칙`을 더 잘 지킬 수 있습니다.
+
+- 저는 View 구조체와 뷰모델의 파일이 별도로 분리되는 것도 복잡성을 늘린다고 판단하여, View 구조체가 구현된 파일에 `private extension`으로 뷰모델을 구현하여 뷰와 뷰모델의 관계를 좀 더 직관적으로 파악할 수 있도록 했습니다.
+
+```swift
+struct TaskListView: View {
+
+    @EnvironmentObject var taskManager: TaskManager
+    @StateObject private var taskListViewModel: TaskListViewModel
+    // 나머지 코드...
+}
+
+private extension TaskListView {
+    
+    final class TaskListViewModel: ObservableObject {
+    
+        // 뷰모델의 프로퍼티, 이니셜라이저, 메서드 ...
+    }
+}
+```
+
+<br>
+
+### 2️⃣ DatePicker 지역화 구현
+
+- SwiftUI 의 [DatePicker](https://developer.apple.com/documentation/swiftui/datepicker)는 디폴트로 `영어 인터페이스`를 보여줍니다.
+
+- `지역화`를 위한 좋은 대상이라고 생각하여, 실행 기기의 선호 언어 배열인 `Locale.preferredLanguages`에 접근하여, 가장 우선순위가 높은 언어(first)를 꺼내 locale 을 설정해줬습니다.
+  - 이때, 옵셔널이 나온다면 디폴트인 영어를 보여줄 수 있도록 했습니다.
+  - 아래는 한국어, 일본어, 우크라이나어가 적용된 예시 이미지입니다.
+
+|🇰🇷 설정|🇯🇵 설정|🇺🇦 설정|
+|:-:|:-:|:-:|
+|<p align="left"><img src="https://user-images.githubusercontent.com/71127966/160180371-f06786cc-a365-4a50-a4c1-a01cbe445b4b.png" width="100%"></p>|<p align="left"><img src="https://user-images.githubusercontent.com/71127966/160180382-7248adfb-acb6-4b5f-86da-8fc492579621.png" width="100%"></p>|<p align="left"><img src="https://user-images.githubusercontent.com/71127966/160180391-82173e4b-4130-4b7e-827d-baacd0a0d8f3.png" width="100%"></p> |
+
+```swift
+struct CustomDatePicker: View {
+    
+    @Binding var taskDueDate: Date
+    private let defaultDatePickerLanguage: String = "en"
+    
+    var body: some View {
+        DatePicker("", selection: $taskDueDate, displayedComponents: .date)
+            .labelsHidden()
+            .datePickerStyle(.wheel)
+            .scaleEffect(1.2)
+            .padding(.vertical, 20)
+            .environment(\.locale, Locale(identifier: Locale.preferredLanguages.first ?? defaultDatePickerLanguage))
+    }
+}
+```
+
+<br>
+
+### 3️⃣ NavigationBar 커스터마이징을 위한 ViewModifier 구현
+
+- SwiftUI 에서는 `NavigationBar` 위에 올라가는 Text 의 font, foregroundColor, tintColor, shadowColor 등을 커스터마이징할 수 없습니다.
+
+<img width="660" alt="navigationTitle 에는 unstyled text 만 들어갈 수 있다 - SwiftUI" src="https://user-images.githubusercontent.com/71127966/160174892-8eb35625-e019-4cc9-b45e-80f8ef1733ec.png">
+
+- [Navigation Bar Styling in SwiftUI](https://youtu.be/kCJyhG8zjvY) 영상을 참고하여, `ViewModifier 프로토콜`을 준수하는 구조체를 구현했습니다.
+
+- View 타입의 extension 으로 메서드(modifier) 구현하여, 가장 상위의 NavigationView 에 적용했습니다.
+
+- NavigationBar 에 올라가는 Title 의 font, foregroundColor, 버튼의 색상인 tintColor, Bar 의 경계선을 감출 것인지 여부를 선택할 수 있게 만들었습니다.
+
+```swift
+struct NavigationBarAppearanceModifier: ViewModifier {
+    
+    init(font: UIFont.TextStyle, foregroundColor: UIColor, tintColor: UIColor?, hideSeparator: Bool) {
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.titleTextAttributes = [
+            .font: UIFont.preferredFont(forTextStyle: font),
+            .foregroundColor: foregroundColor
+        ]
+        if hideSeparator {
+            navigationBarAppearance.shadowColor = .clear
+        }
+        UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+        if let tintColor = tintColor {
+            UINavigationBar.appearance().tintColor = tintColor
+        }
+    }
+    
+    func body(content: Content) -> some View {
+        content
+    }
+}
+
+extension View {
+    
+    /// NavigationBar 의 font, foregroundColor, tintColor 를 변경합니다. hideSeparator 를 true 로 바꾸면 Bar 의 경계선을 비활성화할 수 있습니다.
+    func navigationBarAppearance(font: UIFont.TextStyle, foregroundColor: UIColor, tintColor: UIColor? = nil, hideSeparator: Bool = false) -> some View {
+        self.modifier(NavigationBarAppearanceModifier(font: font, foregroundColor: foregroundColor, tintColor: tintColor, hideSeparator: hideSeparator))
+    }
+}
+```
+
+<br>
+
+### 4️⃣ TextEditor 위에 커스텀 Placeholder 기능 추가
+
+- SwiftUI 에서 제공하는 [TextEditor](https://developer.apple.com/documentation/swiftui/texteditor)에는 `Placeholder` 기능이 없습니다.
+
+- 다행히, 이전 프로젝트인 `<오픈마켓>` 당시에도, 비슷한 문제 해결 경험이 있습니다.
+UIKit 에서 제공하는 [UITextView](https://developer.apple.com/documentation/uikit/uitextview)에도 똑같이 Placeholder 기능이 없어서, 별도의 View 를 `Z축으로` UITextView 위에 올리고, 내용이 채워지면 `isHidden` 처리를 해주는 식으로 문제를 해결했었습니다.
+
+- SwiftUI 에서도 비슷한 방식으로 만들어보려 했는데, `ZStack` 이라는 아주 편리한 기능이 있는 반면에, `isHidden` 프로퍼티는 존재하지 않았습니다. 🤷‍♂️
+구글링을 해보니 `isHidden`을 대체하기 위한 다양한 접근 방법이 있더라구요. [Dynamically hiding view in SwiftUI](https://stackoverflow.com/questions/56490250/dynamically-hiding-view-in-swiftui)
+
+- 저는 View 의 `투명도`를 조절하는 `opacity` modifier 를 사용했습니다!
+해당 리팩토링을 진행하며, `TextEditor`와 Placeholder 를 묶어서 -> 별도의 구조체인 `TextEditorWithPlaceholder` 로 파일 분리했습니다.
+
+https://user-images.githubusercontent.com/71127966/158437488-aa3eb851-3d60-4e33-ada8-888a9b7eba5d.mov
+
+<br>
+
+### 5️⃣ 에러 발생 시, Alert 를 통해 안내
+
+- 에러 발생 시, `Alert` 를 띄워서, 사용자에게 앱 종료 후 문의를 안내하도록 했습니다. 😄
+
+<p align="left"><img src="https://user-images.githubusercontent.com/71127966/159407922-8a96bc6d-506b-45a2-a80d-2cd496ec49d0.png" width="30%"></p> 
+
+```swift
+// 별도의 파일에 열거형과 static let 으로 Alert 구조체를 미리 만들어뒀습니다. for 재사용
+enum AlertManager {
+    
+    static let errorAlert = Alert(
+        title: Text("에러가 발생했어요 🥺"),
+        message: Text("앱 종료 후, 개발자에게 문의해주세요"),
+        dismissButton: .default(Text("알겠어요"))
+    )
+}
+
+// 사용하는 부분 예시
+.alert(isPresented: $taskListRowViewModel.isErrorOccurred) {
+    AlertManager.errorAlert
+}
+```
+
+<br>
+
+### 6️⃣ 현재 날짜와 하루 차이가 나는 걸 판단하는 로직
+
+- 요구사항을 보면, `기한`이 지난 날짜는 빨간색으로 글자 색을 변경해줘야 합니다.
+
+- 저는 할일(Task) Entity 에서 날짜는 `Date` 타입으로 선언했습니다.
+이를 활용하기 위해, Date 타입의 `extension`을 아래와 같이 구현했습니다.
+
+- [DateFormatter 인스턴스 생성 비용](https://sarunw.com/posts/how-expensive-is-dateformatter/)을 줄이기 위해, private static let 으로 만들고 `locale, timeZone, dateStyle` 을 설정해줬습니다.
+Date 인스턴스를 포맷팅된 String 타입으로 만들어주는 연산 프로퍼티인 `dateString`을 구현했습니다.
+
+- `isOverdue` 연산 프로퍼티가, `Date 인스턴스의 기한이 하루 이상 지났는지 판단`해주는 기능을 합니다.
+dateString 으로, 포맷팅된 String 으로 바꾼 걸 다시 Date 타입으로 변환해서 `'시간' 데이터 없이 '날짜' 데이터만 남긴 상태로 크기 비교`를 합니다.
+이때, 옵셔널에 `nil`이 잡히더라도, 비교는 가능하도록 닐병합연산자 넣어줬습니다.
+
+```swift
+extension Date {
+    
+    private static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.timeZone = .autoupdatingCurrent
+        dateFormatter.dateStyle = .medium
+        return dateFormatter
+    }()
+    
+    var dateString: String {
+        return Self.dateFormatter.string(from: self)
+    }
+    
+    var isOverdue: Bool {
+        let targetDate = Self.dateFormatter.date(from: self.dateString) ?? Date(timeIntervalSince1970: self.timeIntervalSince1970)
+        let currentDate = Self.dateFormatter.date(from: Date().dateString) ?? Date()
+        return targetDate < currentDate
+    }
+}
+```
+
+<br>
+
 # ⚙️ [STEP 2-1] 모델 타입 구현
 
 ### 1️⃣ '할일'을 표현하기 위한 Task, TaskStatus 타입 구현
