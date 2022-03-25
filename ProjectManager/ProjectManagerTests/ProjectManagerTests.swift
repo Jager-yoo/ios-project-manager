@@ -14,7 +14,7 @@ class ProjectManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        taskManager = TaskManager(tasks: [])
+        taskManager = TaskManager()
         taskManager.createTask(title: "0번 할일", body: "할일 내용0", dueDate: Date())
         taskManager.createTask(title: "1번 할일", body: "할일 내용1", dueDate: Date())
         taskManager.createTask(title: "2번 할일", body: "할일 내용2", dueDate: Date())
@@ -28,21 +28,21 @@ class ProjectManagerTests: XCTestCase {
     }
 
     func test_Task_인스턴스_5개_생성_검증() {
-        let result = taskManager.todoTasks.count
+        let result = taskManager.fetchTasks(in: .todo).count
         XCTAssertEqual(result, 5)
     }
     
     func test_Task_status_변경_검증() {
-        let doingTarget = taskManager.todoTasks.first
-        let doneTarget = taskManager.todoTasks.last
+        let doingTarget = taskManager.fetchTasks(in: .todo).first
+        let doneTarget = taskManager.fetchTasks(in: .todo).last
         XCTAssertNoThrow(try taskManager.changeTaskStatus(target: doingTarget, to: .doing))
         XCTAssertNoThrow(try taskManager.changeTaskStatus(target: doneTarget, to: .done))
-        XCTAssertTrue(taskManager.doingTasks.first! == doingTarget)
-        XCTAssertTrue(taskManager.doneTasks.first! == doneTarget)
+        XCTAssertTrue(taskManager.fetchTasks(in: .doing).first! == doingTarget)
+        XCTAssertTrue(taskManager.fetchTasks(in: .done).first! == doneTarget)
     }
     
     func test_Task_수정_검증() {
-        let target = taskManager.todoTasks.first!
+        let target = taskManager.fetchTasks(in: .todo).first!
         XCTAssertNoThrow(try taskManager.editTask(target: target, title: "제목 변경", body: "내용 변경", dueDate: Date(timeIntervalSince1970: 1646289747.609154)))
         XCTAssertEqual(target.title, "제목 변경")
         XCTAssertEqual(target.body, "내용 변경")
@@ -50,33 +50,26 @@ class ProjectManagerTests: XCTestCase {
     }
     
     func test_Task_수정_실패하면_에러throw_검증() {
-        weak var target = taskManager.todoTasks.first
-        XCTAssertNoThrow(try taskManager.deleteTask(target: target))
+        weak var target = taskManager.fetchTasks(in: .todo).first
+        XCTAssertNoThrow(try taskManager.deleteTask(indexSet: IndexSet(integer: .zero), in: .todo))
         XCTAssertThrowsError(try taskManager.editTask(target: target, title: "제목 변경", body: "내용 변경", dueDate: Date()))
     }
 
     func test_Task_status_변경_후_삭제_검증() {
-        XCTAssertNoThrow(try taskManager.changeTaskStatus(target: taskManager.todoTasks.last!, to: .done))
-        let target = taskManager.doneTasks.first
-        XCTAssertNoThrow(try taskManager.deleteTask(target: target))
-        XCTAssertTrue(taskManager.doneTasks.isEmpty)
+        XCTAssertNoThrow(try taskManager.changeTaskStatus(target: taskManager.fetchTasks(in: .todo).last!, to: .done))
+        XCTAssertNoThrow(try taskManager.deleteTask(indexSet: IndexSet(integer: .zero), in: .done))
+        XCTAssertTrue(taskManager.fetchTasks(in: .done).isEmpty)
     }
     
     func test_Task_status_변경_실패하면_에러throw_검증() {
-        weak var target = taskManager.todoTasks.first
-        XCTAssertNoThrow(try taskManager.deleteTask(target: target))
+        weak var target = taskManager.fetchTasks(in: .todo).first
+        XCTAssertNoThrow(try taskManager.deleteTask(indexSet: IndexSet(integer: .zero), in: .todo))
         XCTAssertThrowsError(try taskManager.changeTaskStatus(target: target, to: .doing))
-    }
-    
-    func test_Task_삭제_실패하면_에러throw_검증() {
-        weak var target = taskManager.todoTasks.first
-        XCTAssertNoThrow(try taskManager.deleteTask(target: target))
-        XCTAssertThrowsError(try taskManager.deleteTask(target: target))
     }
     
     func test_Task_생성_후_dueDate_정렬_검증() {
         taskManager.createTask(title: "오래된 할일", body: "1991년 11월 6일에 저장한 할일", dueDate: Date(timeIntervalSince1970: 689400000))
-        let target = taskManager.todoTasks.first!
+        let target = taskManager.fetchTasks(in: .todo).first!
         XCTAssertTrue(target.dueDate == Date(timeIntervalSince1970: 689400000))
     }
 }
