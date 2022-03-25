@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Task: ObservableObject, Identifiable, Equatable {
+final class Task: ObservableObject, Identifiable, Equatable {
     
     let id: String
     @Published var title: String
