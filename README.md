@@ -1,10 +1,14 @@
-# 📱 프로젝트 관리 앱
+# 📱 프로젝트 관리 앱 시연 영상
+
+https://user-images.githubusercontent.com/71127966/160186136-98a09970-bc8e-4d9b-94c7-fdfd16baf7ac.mov
+
+<br>
 
 # 🧰 적용 기술 선정
 
 |UI|비동기 이벤트 처리|Local DB|Remote DB|의존성 관리 도구|
 |:-:|:-:|:-:|:-:|:-:|
-|[SwiftUI](https://developer.apple.com/kr/xcode/swiftui/)|[Combine](https://developer.apple.com/documentation/combine)|[Realm](https://github.com/realm/realm-swift)|[Firebase](https://github.com/firebase/firebase-ios-sdk)|[Swift Package Manager](https://www.swift.org/package-manager/)|
+|[SwiftUI](https://developer.apple.com/kr/xcode/swiftui/)|[Combine](https://developer.apple.com/documentation/combine)|[Realm](https://github.com/realm/realm-swift)(미구현)|[Firebase](https://github.com/firebase/firebase-ios-sdk)(미구현)|[Swift Package Manager](https://www.swift.org/package-manager/)|
 
 <br>
 
