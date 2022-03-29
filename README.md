@@ -14,7 +14,8 @@ https://user-images.githubusercontent.com/71127966/160186136-98a09970-bc8e-4d9b-
 
 # ⚙️ [STEP 2-2] 기본 UI 및 Cell 간의 이동, 삭제, 수정 등의 비즈니스 로직 구현
 
-### 1️⃣ MVVM 패턴 적용
+<details>
+<summary><h3>1️⃣ MVVM 패턴 적용</h3></summary>
 
 - 뼈대가 되는 View 구조체들이 프로퍼티로 `@EnvironmentObject`, `@StateObject` 만 갖고, 그 외의 비즈니스 로직이나 상수는 전부 `뷰모델` 내로 이동시켰습니다! 👍🏻
 
@@ -39,10 +40,10 @@ private extension TaskListView {
     }
 }
 ```
+</details>
 
-<br>
-
-### 2️⃣ DatePicker 지역화 구현
+<details>
+<summary><h3>2️⃣ DatePicker 지역화 구현</h3></summary>
 
 - SwiftUI 의 [DatePicker](https://developer.apple.com/documentation/swiftui/datepicker)는 디폴트로 `영어 인터페이스`를 보여줍니다.
 
@@ -70,10 +71,10 @@ struct CustomDatePicker: View {
     }
 }
 ```
+</details>
 
-<br>
-
-### 3️⃣ NavigationBar 커스터마이징을 위한 ViewModifier 구현
+<details>
+<summary><h3>3️⃣ NavigationBar 커스터마이징을 위한 ViewModifier 구현</h3></summary>
 
 - SwiftUI 에서는 `NavigationBar` 위에 올라가는 Text 의 font, foregroundColor, tintColor, shadowColor 등을 커스터마이징할 수 없습니다.
 
@@ -116,10 +117,10 @@ extension View {
     }
 }
 ```
+</details>
 
-<br>
-
-### 4️⃣ TextEditor 위에 커스텀 Placeholder 기능 추가
+<details>
+<summary><h3>4️⃣ TextEditor 위에 커스텀 Placeholder 기능 추가</h3></summary>
 
 - SwiftUI 에서 제공하는 [TextEditor](https://developer.apple.com/documentation/swiftui/texteditor)에는 `Placeholder` 기능이 없습니다.
 
@@ -134,9 +135,10 @@ UIKit 에서 제공하는 [UITextView](https://developer.apple.com/documentation
 
 https://user-images.githubusercontent.com/71127966/158437488-aa3eb851-3d60-4e33-ada8-888a9b7eba5d.mov
 
-<br>
+</details>
 
-### 5️⃣ 에러 발생 시, Alert 를 통해 안내
+<details>
+<summary><h3>5️⃣ 에러 발생 시, Alert 를 통해 안내</h3></summary>
 
 - 에러 발생 시, `Alert` 를 띄워서, 사용자에게 앱 종료 후 문의를 안내하도록 했습니다. 😄
 
@@ -158,10 +160,10 @@ enum AlertManager {
     AlertManager.errorAlert
 }
 ```
+</details>
 
-<br>
-
-### 6️⃣ 현재 날짜와 하루 차이가 나는 걸 판단하는 로직
+<details>
+<summary><h3>6️⃣ 현재 날짜와 하루 차이가 나는 걸 판단하는 로직</h3></summary>
 
 - 요구사항을 보면, `기한`이 지난 날짜는 빨간색으로 글자 색을 변경해줘야 합니다.
 
@@ -197,12 +199,14 @@ extension Date {
     }
 }
 ```
+</details>
 
 <br>
 
 # ⚙️ [STEP 2-1] 모델 타입 구현
 
-### 1️⃣ '할일'을 표현하기 위한 Task, TaskStatus 타입 구현
+<details>
+<summary><h3>1️⃣ '할일'을 표현하기 위한 Task, TaskStatus 타입 구현</h3></summary>
 
 - 이번 프로젝트에서 다뤄야 하는 주요 `Entity`는 `할일(Task)`입니다.
 - Entity 객체 간의 Identity 를 구별하기 위해 `id` 값을 let 프로퍼티로 선언했습니다.
@@ -256,10 +260,10 @@ enum TaskStatus: CaseIterable {
     }
 }
 ```
+</details>
 
-<br>
-
-### 2️⃣ 데이터 관리를 담당하는 TaskManager 타입과 추상화 프로토콜 구현
+<details>
+<summary><h3>2️⃣ 데이터 관리를 담당하는 TaskManager 타입과 추상화 프로토콜 구현</h3></summary>
 
 - TaskManager 클래스는 할일(Task)들을 `배열` 형태로 가지고 있습니다.
 - 추후 3개의 `UITableView(List)`를 구현할 때 `DataSource`로서 데이터를 전달해야 하므로, Status 별로 배열을 필터링해서 리턴해주는 메서드를 구현했습니다.
@@ -318,10 +322,10 @@ final class TaskManager: ObservableObject, TaskManageable {
     }
 }
 ```
+</details>
 
-<br>
-
-### 3️⃣ TaskManager 기능에 대한 Unit Test 코드 작성
+<details>
+<summary><h3>3️⃣ TaskManager 기능에 대한 Unit Test 코드 작성</h3></summary>
 
 - `setUpWithError`, `tearDownWithError` 메서드를 이용해서 각 케이스 메서드가 모두 동일한 조건에서 실행될 수 있도록 했습니다.
 - 테스트 메서드는 7개 작성했으며, 앞으로 추가될 수 있습니다. 😄
@@ -333,11 +337,14 @@ final class TaskManager: ObservableObject, TaskManageable {
   - TaskStatus 변경 실패(에러) 검증
   - Task 생성 후 dueDate 오래된 순서로 정렬 검증
 
+</details>
+
 <br>
 
 # ⚙️ [STEP 1] 라이브러리 의존성 추가 및 환경 설정
 
-### 1️⃣ SwiftUI -> UIKit Intergration
+<details>
+<summary><h3>1️⃣ SwiftUI -> UIKit Intergration</h3></summary>
 
 - UIKit 으로 만들어진 기존 프로젝트에 `SwiftUI` 프레임워크를 적용했습니다.
 - 스토리보드와 ViewController.swift 파일을 삭제하고 `ContentView.swift` 파일을 만들어서 SwiftUI 스타일로 구성했습니다.
@@ -355,27 +362,29 @@ func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options conn
     window?.makeKeyAndVisible()
 }
 ```
+</details>
 
-<br>
-
-### 2️⃣ Firebase, Realm 라이브러리 추가
+<details>
+<summary><h3>2️⃣ Firebase, Realm 라이브러리 추가</h3></summary>
 
 - 데이터 저장을 위해 사용할 Firebase, Realm 라이브러리를 `Swift Package Manager`를 통해 의존성 추가했습니다.
 
 <p align="left"><img src="https://user-images.githubusercontent.com/71127966/156405675-cccd5127-2ca4-4b02-bcee-9c66b0e8bef0.png" width="40%"></p>
 
-<br>
+</details>
 
-### 3️⃣ Firebase Realtime DB 연동 체크
+<details>
+<summary><h3>3️⃣ Firebase Realtime DB 연동 체크</h3></summary>
 
 - Firebase 의 `Realtime Database` 기능을 사용하기 위해 [해당 블로그](https://ios-development.tistory.com/231?category=899471) 참고하여 테스트를 진행했습니다.
 - SwiftUI 프레임워크에서는 viewDidLoad() 메서드를 사용할 수 없어서, [onAppear(perform:)](https://developer.apple.com/documentation/swiftui/view/onappear(perform:)) 메서드를 사용했습니다.
 
 <p align="left"><img src="https://user-images.githubusercontent.com/71127966/156117315-5ea9a249-6310-4c35-bbfe-f84b0c3b4406.png" width="100%"></p>
 
-<br>
+</details>
 
-### 4️⃣ Firebase Cloud Firestore 전환 및 연동 체크
+<details>
+<summary><h3>4️⃣ Firebase Cloud Firestore 전환 및 연동 체크</h3></summary>
 
 - 기존에 Firebase `Realtime DB`를 사용하기로 했는데요, `Firestore`가 상대적으로 [더 업그레이드된 최신의 DB](https://firebase.google.com/docs/firestore/rtdb-vs-firestore?hl=ko)이고, 현업에서도 Realtime -> Firestore 로 전환하는 추세라는 조언을 들었습니다.
 - Realtime, Firestore 간의 가장 큰 차이는 [과금 모델](https://firebase.google.com/pricing?hl=ko)이라고 생각했습니다.
@@ -393,9 +402,10 @@ func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options conn
 
 <p align="left"><img src="https://user-images.githubusercontent.com/71127966/156414374-77a0022b-0387-4259-9785-19e009c2166b.png" width="100%"></p>
 
-<br>
+</details>
 
-### 5️⃣ SwiftLint 추가
+<details>
+<summary><h3>5️⃣ SwiftLint 추가</h3></summary>
 
 - `SwiftLint(린트)`는 SPM 을 지원하지 않습니다.
 - 린트를 세팅하기 위해 `CocoaPods`를 추가하기엔 의존성 도구가 2개로 나뉘어져 관리의 불편함이 생길 거라 생각했습니다.
@@ -414,9 +424,10 @@ func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options conn
 
 <p align="left"><img src="https://user-images.githubusercontent.com/71127966/156408060-a8ca8935-bea8-48b2-b8c3-23d433adc73a.png" width="40%"></p>
 
-<br>
+</details>
 
-### 6️⃣ Google Firebase API Key 노출에 대해서
+<details>
+<summary><h3>6️⃣ Google Firebase API Key 노출에 대해서</h3></summary>
 
 - Firebase 연동을 위해 추가한 `GoogleService-Info.plist` 파일을 깃헙에 푸시하고 잠시 후에 [GitGuardian](https://www.gitguardian.com/) 이라는 곳에서 이메일을 받았습니다.
 - 민감 정보인 `Google API Key`가 public repo 에 노출되었다는 경고였는데요.
@@ -425,3 +436,4 @@ func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options conn
 
 <p align="left"><img src="https://user-images.githubusercontent.com/71127966/156119042-3dd7ccfe-f2f2-410f-b410-03a720c44906.png" width="70%"></p>
 
+</details>
