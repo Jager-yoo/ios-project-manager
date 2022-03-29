@@ -1,4 +1,6 @@
-# 📱 프로젝트 관리 앱 시연 영상
+# 📱 <프로젝트 관리 앱> 시연 영상
+
+> 할 일을 3개의 단계(Todo, Doing, Done)로 구분하여 관리할 수 있는 아이패드 전용 앱
 
 https://user-images.githubusercontent.com/71127966/160186136-98a09970-bc8e-4d9b-94c7-fdfd16baf7ac.mov
 
@@ -405,7 +407,7 @@ func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options conn
 </details>
 
 <details>
-<summary><h3>5️⃣ SwiftLint 추가</h3></summary>
+<summary><h3>5️⃣ Homebrew 이용한 SwiftLint 추가</h3></summary>
 
 - `SwiftLint(린트)`는 SPM 을 지원하지 않습니다.
 - 린트를 세팅하기 위해 `CocoaPods`를 추가하기엔 의존성 도구가 2개로 나뉘어져 관리의 불편함이 생길 거라 생각했습니다.
