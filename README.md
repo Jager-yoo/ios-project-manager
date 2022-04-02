@@ -138,9 +138,37 @@ UIKit 에서 제공하는 [UITextView](https://developer.apple.com/documentation
 https://user-images.githubusercontent.com/71127966/158437488-aa3eb851-3d60-4e33-ada8-888a9b7eba5d.mov
 
 </details>
+    
+<details>
+<summary><h3>5️⃣ 할 일 개수를 표현하는 동그라미 Label 에 숨은 디테일</h3></summary>
+
+- 각 List 의 포함된 할 일(Task) 개수를 표현해주는 `동그라미 Label` 에선 이런 고민이 있었습니다.
+  - Label 을 동그란 모양으로 만들기 위해 `clipShape(Circle())` 메서드를 사용했습니다.
+  - 숫자의 자리수가 커지면, 동그라미도 같이 커지는 걸 막기 위해 `frame`을 적당한 크기로 고정했습니다.
+  - 숫자가 100 이상(세 자리 수)으로 커지는 경우, 가독성이 떨어지므로, `삼항연산자`를 사용해서 `99+`가 표시되도록 했습니다.
+  - 다크 모드 대응을 위해 `Color.primary`를 사용했고, 글자 색과 배경 색이 반대이므로, `colorInvert()` 메서드를 사용하여 글자 색을 반전시켰습니다.
+
+```swift
+Text(tasksCount)
+    .frame(width: 30, height: 24)
+    .font(.title3)
+    .lineLimit(1)
+    .foregroundColor(.primary)
+    .colorInvert() // primary 색상을 반전시켜서, 흰색을 표현하고 다크모드에 대응
+    .padding(.all, 5)
+    .background(Color.primary)
+    .clipShape(Circle()) // 동그라미 모양으로 clip
+    .minimumScaleFactor(0.8) // 글자가 frame 을 넘어가려 하면 0.8배까지는 줄어들면서 대응 (더 줄어들면 truncate)
+```
+
+|숫자 자리수 대응|다크 모드 대응|
+|:-:|:-:|
+|![image](https://user-images.githubusercontent.com/71127966/157205824-0bf9649e-8600-45ca-947d-7af149c6fa76.png)|![image](https://user-images.githubusercontent.com/71127966/157207013-dfcbbd51-567f-498d-a3b3-ed75318a230a.png)|
+
+</details>
 
 <details>
-<summary><h3>5️⃣ 에러 발생 시, Alert 를 통해 안내</h3></summary>
+<summary><h3>6️⃣ 에러 발생 시, Alert 를 통해 안내</h3></summary>
 
 - 에러 발생 시, `Alert` 를 띄워서, 사용자에게 앱 종료 후 문의를 안내하도록 했습니다. 😄
 
@@ -165,7 +193,7 @@ enum AlertManager {
 </details>
 
 <details>
-<summary><h3>6️⃣ 현재 날짜와 하루 차이가 나는 걸 판단하는 로직</h3></summary>
+<summary><h3>7️⃣ 현재 날짜와 하루 차이가 나는 걸 판단하는 로직</h3></summary>
 
 - 요구사항을 보면, `기한`이 지난 날짜는 빨간색으로 글자 색을 변경해줘야 합니다.
 
