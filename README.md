@@ -1,6 +1,6 @@
 # 📱 <프로젝트 관리 앱> 시연 영상
 
-> 할 일을 3개의 단계(Todo, Doing, Done)로 구분하여 관리할 수 있는 아이패드 전용 앱
+> 할 일을 3개의 단계(Todo, Doing, Done)로 구분하여 관리할 수 있는 iPad 전용 앱
 
 https://user-images.githubusercontent.com/71127966/160186136-98a09970-bc8e-4d9b-94c7-fdfd16baf7ac.mov
 
@@ -10,7 +10,7 @@ https://user-images.githubusercontent.com/71127966/160186136-98a09970-bc8e-4d9b-
 
 |UI|비동기 이벤트 처리|Local DB|Remote DB|의존성 관리 도구|
 |:-:|:-:|:-:|:-:|:-:|
-|[SwiftUI](https://developer.apple.com/kr/xcode/swiftui/)|[Combine](https://developer.apple.com/documentation/combine)|[Realm](https://github.com/realm/realm-swift)(미구현)|[Firebase](https://github.com/firebase/firebase-ios-sdk)(미구현)|[Swift Package Manager](https://www.swift.org/package-manager/)|
+|[SwiftUI 2.0](https://developer.apple.com/kr/xcode/swiftui/)(iOS 14.0+)|[Combine](https://developer.apple.com/documentation/combine)|[Realm](https://github.com/realm/realm-swift)(미구현)|[Firebase](https://github.com/firebase/firebase-ios-sdk)(미구현)|[Swift Package Manager](https://www.swift.org/package-manager/)|
 
 <br>
 
